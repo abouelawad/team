@@ -1,0 +1,6 @@
+{
+  "inline-parameters.fontSize": "0.9em",
+  "inline-parameters.fontStyle": "normal",
+  "diffEditor.wordWrap": "on",
+  "editor.wordWrap": "on"
+}
