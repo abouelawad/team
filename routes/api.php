@@ -4,6 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\StaffController;
+use App\Models\Group;
+use Illuminate\Routing\RouteGroup;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,4 +37,13 @@ Route::group([
   
   Route::post('login', [AuthController::class,'login']);
   Route::post('add/test' , [AuthController::class , 'addUserTester']);
+});
+
+Route::group(['prefix'=> 'admin'], function(){
+  // * Staff Routes
+  Route::post('staff/add' , [StaffController::class , 'addStaff']);
+  Route::get('staff/show' , [StaffController::class , 'allStaff']);
+  Route::get('staff/select' , [StaffController::class , 'specificStaff']);
+  Route::post('staff/delete' , [StaffController::class , 'deleteStaff']);
+  Route::post('staff/update' , [StaffController::class , 'updateStaff']);
 });

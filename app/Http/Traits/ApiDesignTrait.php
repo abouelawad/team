@@ -6,7 +6,7 @@ namespace App\Http\Traits;
 trait ApiDesignTrait
 {
 
-  public function ApiResponse($status = 200,$message = null , $errors = null , $data=null)
+  public function apiResponse($status = 200,$message = null , $errors = null , $data=null)
   {
     $array = [
       'status' =>$status,

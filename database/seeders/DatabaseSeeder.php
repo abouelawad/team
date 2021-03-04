@@ -33,6 +33,15 @@ class DatabaseSeeder extends Seeder
             'role_id' => '1',
 
         ]);
+        User::create([
+            'name' => 'student',
+            'email' => 'student@a.com',
+            'password' => Hash::make('123456'),
+            'phone' => '123456',
+            'status' => '0',
+            'role_id' => 3,
+
+        ]);
         // User::factory(10)->create();
     }
 }
