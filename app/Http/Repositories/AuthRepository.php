@@ -23,7 +23,7 @@ class AuthRepository implements AuthInterface
   public function login()
   {
     $credentials = request(['email', 'password']);
-    $token = auth()->attempt($credentials);
+    $token = Auth::attempt($credentials);
     // dd($credentials);
           if (! $token ) {
           

@@ -22,7 +22,7 @@ class StaffRepository implements StaffInterface
      $this->Role = $Role;
   }
 
- //* SECTION  addStaff
+ //* =================== SECTION  addStaff ===================
 
   public function addStaff($request){
     
@@ -49,7 +49,7 @@ class StaffRepository implements StaffInterface
    return $this->apiResponse(200, 'new staff added successfully' , null );
   }
 
- //* SECTION  updateStaff
+ //* =================== SECTION  updateStaff ===================
 
   public function updateStaff($request){
 
@@ -101,7 +101,9 @@ class StaffRepository implements StaffInterface
     $staffPhone    = $this->User::where('id',$request->staff_id)->first()->phone;
     $staffStatus   = $this->User::where('id',$request->staff_id)->first()->status;
     $staffRole_id  = $this->User::where('id',$request->staff_id)->first()->role_id;
+
 // dd($staffStatus , $request->status );
+
     $staff->update([
       'name'=> $request->name ??$staffName,
       'email'=> $request->email??$staffEmail,
@@ -114,7 +116,7 @@ class StaffRepository implements StaffInterface
 
 
 
- //* SECTION  deleteStaff
+ //* =================== SECTION  deleteStaff ===================
 
   public function deleteStaff($request){
     $validation = Validator::make($request->all(),[
@@ -141,7 +143,7 @@ class StaffRepository implements StaffInterface
     return $this->apiResponse(200 , 'Staff was deleted');
   }
 
-// * SECTION allStaff
+//* =================== SECTION allStaff ===================
 
   public function allStaff(){
       $roles = ['admin', 'secretary' , 'support'];
@@ -159,7 +161,8 @@ class StaffRepository implements StaffInterface
 
   }
 
-//* SECTION specificStaff
+//* =================== SECTION specificStaff ===================
+
   public function specificStaff($request)
   {
     // dd($request->all());
@@ -176,11 +179,12 @@ class StaffRepository implements StaffInterface
     $staffMember = $this->User::where('id' , $request->staff_id )->whereHas('role', function($query){
       return $query->where('is_staff','staff');
     })->with('role')->first();
-
+    
     if(! $staffMember){
       return $this->apiResponse(422 , 'Can not select this Item' , 'Id is not for a staff');
     }
-
     return $this->apiResponse(200 , 'done', null , $staffMember);
   }
+
+
 }
