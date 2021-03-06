@@ -6,7 +6,7 @@ interface TeacherInterface
   public function addTeacher($request);
   public function updateTeacher($request);
   public function deleteTeacher($request);
-  public function allTeacher();
+  public function allTeachers();
   public function specificTeacher($request);
   
 }

@@ -5,7 +5,6 @@ use App\Models\User;
 use App\Http\Traits\ApiDesignTrait;
 use App\Http\Interfaces\StaffInterface;
 use App\Models\Role;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 

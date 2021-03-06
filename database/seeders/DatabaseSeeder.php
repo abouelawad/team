@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
 
         User::create([
             'name' => 'admin',
-            'email' => 'admin@a.com',
+            'email' => 'admin1@a.com',
             'password' => Hash::make('123456'),
             'phone' => '123456',
             'status' => '0',
@@ -35,11 +35,38 @@ class DatabaseSeeder extends Seeder
         ]);
         User::create([
             'name' => 'student',
-            'email' => 'student@a.com',
+            'email' => 'student1@a.com',
             'password' => Hash::make('123456'),
             'phone' => '123456',
             'status' => '0',
             'role_id' => 3,
+
+        ]);
+        User::create([
+            'name' => 'teacher',
+            'email' => 'teacher1@a.com',
+            'password' => Hash::make('123456'),
+            'phone' => '123456',
+            'status' => '0',
+            'role_id' => 2,
+
+        ]);
+        User::create([
+            'name' => 'support',
+            'email' => 'support@a.com',
+            'password' => Hash::make('123456'),
+            'phone' => '123456',
+            'status' => '0',
+            'role_id' => 4,
+
+        ]);
+        User::create([
+            'name' => 'secretary',
+            'email' => 'secretary@a.com',
+            'password' => Hash::make('123456'),
+            'phone' => '123456',
+            'status' => '0',
+            'role_id' => 4,
 
         ]);
         // User::factory(10)->create();

@@ -29,8 +29,8 @@ public function addTeacher(Request $request)
     return  $this->teacherInterface->deleteTeacher($request);
   }
 
-  public function allTeacher(){
-      return $this->teacherInterface->allTeacher() ;
+  public function allTeachers(){
+      return $this->teacherInterface->allTeachers() ;
   }
 
   public function specificTeacher(Request $request){  

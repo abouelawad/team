@@ -36,12 +36,14 @@ class TeacherRepository implements TeacherInterface
            return $this->apiResponse(422,'validation Error', $validation->errors());
        }
     
+       $teacherRole = $this->Role::where('is_teacher', 1)->first();
+
       $this->User::create([
       'name'=> $request->name,
       'email'=> $request->email,
       'phone'=> $request->phone,
       'password'=> Hash::make($request->password),
-      'role_id'=>2,
+      'role_id'=>$teacherRole->id,
       'status'=> 0
     ]);
    return $this->apiResponse(200, 'new teacher added successfully' , null );
@@ -142,7 +144,7 @@ class TeacherRepository implements TeacherInterface
 
 // * SECTION allTeacher
 
-  public function allTeacher(){
+  public function allTeachers(){
 
     # $teacher = $this->Role::where('is_teacher' , 1)->with('user')->get();
     // dd($teacher);
