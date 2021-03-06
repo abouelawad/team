@@ -37,6 +37,7 @@ class TeacherRepository implements TeacherInterface
        }
     
        $teacherRole = $this->Role::where('is_teacher', 1)->first();
+     
 
       $this->User::create([
       'name'=> $request->name,
@@ -53,21 +54,9 @@ class TeacherRepository implements TeacherInterface
 
   public function updateTeacher($request){
 
-     $checkTeacher = $this->User::where('id',$request->teacher_id)->whereHas('role' , function($query){
-      return $query->where('is_teacher' , 1);
-    })->first(); 
 
-// dd($checkTeacher);
 
-    if(! $checkTeacher)
-    {
-      return $this->apiResponse(422 , 'Can not update this Item' , 'Id is not for a teacher member');
-    }
 
-   
-
-// dd($checkTeacher->status);
-// dd(request()->all());
     $validation = Validator::make($request->all(),[
       'teacher_id' =>'required |exists:users,id',
       'email' => 'email | unique:users,email,'.$request->teacher_id,
@@ -77,14 +66,10 @@ class TeacherRepository implements TeacherInterface
       // 'role_id' =>'exists:roles,id',
     ]);
 
-    // dd($validation->valid());
-    // dd($validation->errors());
     if($validation->fails())
     {
-      // dd('fails');
       return $this->apiResponse(422 , 'validation Error' , $validation->errors());
     }
-    // dd('proceed to update');
 
     $teacher = $this->User::where('id',$request->teacher_id)->whereHas('role' , function($query){
       return $query->where('is_teacher' , 1);
@@ -92,7 +77,6 @@ class TeacherRepository implements TeacherInterface
 
     // dd($teacher);
     if(!$teacher){
-      dd('notteacher ');
       return $this->apiResponse(422 , 'Can not update this Item' , 'Id is not for a teacher member');
     }
 //! IN CASE OF PARTIAL UPDATE
@@ -100,8 +84,7 @@ class TeacherRepository implements TeacherInterface
     $teacherName     = $this->User::where('id',$request->teacher_id)->first()->name;
     $teacherPhone    = $this->User::where('id',$request->teacher_id)->first()->phone;
     $teacherStatus   = $this->User::where('id',$request->teacher_id)->first()->status;
-    // $teacherRole_id  = $this->User::where('id',$request->teacher_id)->first()->role_id;
-// dd($teacherStatus , $request->status );
+
     $teacher->update([
       'name'=> $request->name ??$teacherName,
       'email'=> $request->email??$teacherEmail,

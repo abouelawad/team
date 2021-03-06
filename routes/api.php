@@ -4,11 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\StaffController;
-use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\GroupController;
-use App\Models\Group;
-use Illuminate\Routing\RouteGroup;
+use App\Http\Controllers\StaffController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TeacherController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,15 +49,22 @@ Route::group(['prefix'=> 'admin'], function(){
   Route::post('staff/update' , [StaffController::class , 'updateStaff']);
   // * Teacher Routes
   Route::post('teacher/add' , [TeacherController::class , 'addTeacher']);
-  Route::get('teacher/show' , [TeacherController::class , 'allTeacher']);
+  Route::get('teachers/all' , [TeacherController::class , 'allTeachers']);
   Route::get('teacher/select' , [TeacherController::class , 'specificTeacher']);
   Route::post('teacher/delete' , [TeacherController::class , 'deleteTeacher']);
   Route::post('teacher/update' , [TeacherController::class , 'updateTeacher']);
 
   // * Group Routes
   Route::post('group/add' , [GroupController::class , 'addGroup']);
-  Route::get('group/show' , [GroupController::class , 'allGroup']);
+  Route::get('groups/all' , [GroupController::class , 'allGroups']);
   Route::get('group/select' , [GroupController::class , 'specificGroup']);
   Route::post('group/delete' , [GroupController::class , 'deleteGroup']);
   Route::post('group/update' , [GroupController::class , 'updateGroup']);
+
+  //* Student Routes
+  Route::post('student/add' , [StudentController::class , 'addStudent']);
+  Route::get('students/all' , [StudentController::class , 'allStudents']);
+  Route::get('student/select' , [StudentController::class , 'specificStudent']);
+  Route::post('student/delete' , [StudentController::class , 'deleteStudent']);
+  Route::post('student/update' , [StudentController::class , 'updateStudent']);
 });
