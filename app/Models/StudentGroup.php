@@ -15,4 +15,5 @@ class StudentGroup extends Model
         'count',
         'price'
     ];
+
 }

@@ -39,7 +39,18 @@ class GroupRepository implements GroupInterface
            return $this->apiResponse(422,'validation Error', $validation->errors());
        }
 
-    // dd(Auth::user()->id);
+       $teacher = $this->User->where('id', $request->teacher_id)->whereHas('role' , function($query){
+         return $query->where([['is_staff','0'], ['is_teacher' , 1]]);
+       })->first();
+
+       if(!$teacher){
+      return $this->apiResponse(422,'Can not Assign this member', 'Id is not for a teacher ');
+       };
+
+
+   if(!auth()->user()){
+      return $this->apiResponse(422, 'login message', 'please login first');
+   }
     
       $this->Group::create([
       'name'=> $request->name,
@@ -85,8 +96,8 @@ class GroupRepository implements GroupInterface
     $group->update([
       'name'=> $request->name ??$groupName,
       'body'=> $request->body??$groupBody,
-      'image'=> $request->status??$groupImage,
-      'teacher_id'=> $request->status??$groupTeacher_id,
+      'image'=> $request->image??$groupImage,
+      'teacher_id'=> $request->teacher_id??$groupTeacher_id,
       'created_by'=> auth()->user()->id,
     ]);
     return $this->apiResponse(200 , 'Group updated successfully' , null ,$group );

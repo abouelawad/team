@@ -6,6 +6,7 @@ use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\EndUserController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 
@@ -30,6 +31,8 @@ Route::post('testrequest' , [ApiController::class, 'testApirequest']);
 
 Route::post('try/{para}' , [AuthController::class , 'try']);
 
+Route::get('enduser/groups' ,[EndUserController::class , 'endUserGroups'] );
+
 
 Route::group([
   'middleware' => 'api',
@@ -40,7 +43,7 @@ Route::group([
   Route::post('add/test' , [AuthController::class , 'addUserTester']);
 });
 
-Route::group(['prefix'=> 'admin'], function(){
+Route::group(['prefix'=> 'admin' , 'middleware'=> 'JwtToken'], function(){
   // * Staff Routes
   Route::post('staff/add' , [StaffController::class , 'addStaff']);
   Route::get('staff/show' , [StaffController::class , 'allStaff']);

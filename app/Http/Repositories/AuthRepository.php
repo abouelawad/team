@@ -57,7 +57,6 @@ class AuthRepository implements AuthInterface
       return $this->apiResponse(200 , 'welcome' , null , $data);
   }
 
-
  
   public function addUserTester($request)
   {

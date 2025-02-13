@@ -4,6 +4,7 @@ namespace App\Http\Repositories;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Group;
 use App\Models\StudentGroup;
 use App\Http\Traits\ApiDesignTrait;
 use Illuminate\Support\Facades\Hash;
@@ -26,132 +27,85 @@ class StudentRepository implements StudentInterface
   }
 
 
-//* =================== first  FUNCTION  addStudent ===================
 
-  // public function addStudent($request)
-  // {
-  //   $validation = Validator::make($request->all(), [
-  //     'name' => 'required | min:3',
-  //     'email' => 'required |email | unique:users,email',
-  //     'password' => 'required | min:3',
-  //   ]);
-
-  //   if ($validation->fails()) {
-  //     return $this->apiResponse(422, 'validation Error', $validation->errors());
-  //   }
-
-  //   $studentRole = $this->Role::where([['is_staff', '0'], ['is_teacher', '0']])->first()->id;
-
-  //   $this->User::create([
-  //     'name' => $request->name,
-  //     'email' => $request->email,
-  //     'phone' => $request->phone,
-  //     'password' => Hash::make($request->password),
-  //     'role_id' => $studentRole,
-  //     'status' => 0
-  //   ]);
-  //   return $this->apiResponse(200, 'new student added successfully', null);
-  // }
-
-//* =================== firstEND FUNCTION  addStudent ===================
-
-  //* =================== FUNCTION  addStudent with group ===================
+//* =================== FUNCTION  addStudent with group array ===================
 
   public function addStudent($request)
   {
     $validation = Validator::make($request->all(), [
       'name' => 'required | min:3',
-      'email' => 'required |email | unique:users,email',
+      'email' => 'required |email | unique:users,email,column',
       'password' => 'required | min:3',
+      'groups.*'=> 'required '
     ]);
 
 
-
-    if ($validation->fails()) {
-      return $this->apiResponse(422, 'validation Error', $validation->errors());
-    }
-
-    if (! $request->has('groups')) {
-     
-      return $this->apiResponse(422, 'No Groups Found You need To Join At Least one Group');
-    }
-
-    $studentRole = $this->Role::where([['is_staff', '0'], ['is_teacher', '0']])->first()->id;
-
-    $student = $this->User::create([
-      'name' => $request->name,
-      'email' => $request->email,
-      'phone' => $request->phone,
-      'password' => Hash::make($request->password),
-      'role_id' => $studentRole,
-      'status' => 0
-    ]);
-
-
-
-      foreach ($request->groups as $group){
-        $requestedGroup = explode(",", $group);
-
-        $this->StudentGroup::create([
-          'student_id'=> $student->id,
-          'group_id' => $requestedGroup[0],
-          'count' => $requestedGroup[1],
-          'price' => $requestedGroup[2]
-        ]);
+  if ($validation->fails()) {
+    return $this->apiResponse(422, 'validation Error', $validation->errors());
+  }
+  
+  $groups = $request->groups;
+  $groupCount=count($groups);
+  
+  // dd($groups);
+  foreach ($groups as $group) {
+    //check formatting of group
+      if (count($group) != 3) {
+        return $this->apiResponse(422, 'group data is missing');
       }
+    // check existing of the group in database
+      $checkGroup = Group::find($group[0]);
+      if (! $checkGroup) {
+        return $this->apiResponse(422, 'group is not exist');
+      }
+      
+  }  
 
 
+    for ($i=0; $i < $groupCount-1; $i++) {
+      $array[] = ($groups[$i][0]);
 
-    return $this->apiResponse(200, 'new student added successfully', null);
+      // NOTE $i+1 start count from index 1 (the second item) to compare 
+      if (in_array($groups[$i + 1][0], $array)) {
+        return $this->apiResponse(422, 'group is repeated' );
+      } 
+    }
+
+  $studentRole = $this->Role::where([['is_staff', '0'], ['is_teacher', '0']])->first();
+  
+  if(! $studentRole){
+    return $this->apiResponse(422,'Can not Assign this member', 'Id is not for a student check database');
   }
 
-  //* ===================  END FUNCTION  addStudent ===================
-// // =================== OLD FUNCTION  updateStudent ===================
-  // public function updateStudent($request)
-  // {
+  $student = $this->User::create([
+    'name' => $request->name,
+    'email' => $request->email,
+    'phone' => $request->phone,
+    'password' => Hash::make($request->password),
+    'role_id' => $studentRole->id,
+    'status' => 0
+  ]);
 
-  //   //? VAlidation
-
-  //   $validation = Validator::make($request->all(), [
-  //     'name' => ' min:3',
-  //     'email' => 'email | unique:users,email,' . $request->student_id,
-  //     'password' => ' min:3',
-  //   ]);
-
-  //   if ($validation->fails()) {
-  //     return $this->apiResponse(422, 'validation Error', $validation->errors());
-  //   }
-
-  //   //? Check Student existence
-
-  //   $student = $this->User::where('id', $request->student_id)->whereHas('role', function ($query) {
-  //     return $query->where([['is_staff', '0'], ['is_teacher', '0']]);
-  //   })->first();
-
-  //   if (!$student) {
-  //     return $this->apiResponse(422, 'Can not update this Item', 'Id is not for a teacher member');
-  //   }
-
-  //   //! IN CASE OF PARTIAL UPDATE
-  //   $studentEmail    = $this->User::where('id', $request->student_id)->first()->email;
-  //   $studentName     = $this->User::where('id', $request->student_id)->first()->name;
-  //   $studentPhone    = $this->User::where('id', $request->student_id)->first()->phone;
-  //   $studentStatus   = $this->User::where('id', $request->student_id)->first()->status;
-
-  //   $student->update([
-  //     'name' => $request->name ?? $studentEmail,
-  //     'email' => $request->email ?? $studentName,
-  //     'phone' => $request->phone ?? $studentPhone,
-     // 'role_id'=> $request->role_id??$teacherRole_id,
-  //     'status' => $request->status ?? $studentStatus
-  //   ]);
-  //   return $this->apiResponse(200, 'Student updated successfully', null, $student);
-  // }
-// // =================== OLD END FUNCTION  updateStudent ===================
-  //* =================== FUNCTION  updateStudent ===================
-  public function updateStudent($request)
+  
+  foreach($groups as $group)
   {
 
+      $this->StudentGroup::create([
+      'group_id'    => $group[0],
+      'student_id'  =>$student->id,
+      'count'       => $group[1],
+      'price'       => $group[2]
+        ]);
+  }
+
+      return $this->apiResponse(200, 'new student added successfully' , null , $student);
+}
+
+//* ===================  END FUNCTION  addStudent with group (array) ===================
+
+//* =================== FUNCTION  updateStudent ===================
+  public function updateStudent($request)
+  {
     //? VALIDATION
 
     $validation = Validator::make($request->all(), [
@@ -161,7 +115,6 @@ class StudentRepository implements StudentInterface
     ]);
 
     if ($validation->fails()) {
-      // dd('fails');
       return $this->apiResponse(422, 'validation Error', $validation->errors());
     }
 
@@ -219,7 +172,7 @@ class StudentRepository implements StudentInterface
       return $this->apiResponse(422, 'validation Error', $validation->errors());
     }
 
-    // dd($this->User::where('id',$request->teacher_id)->first() , $this->User );
+
 
     $student = $this->User::where('id', $request->student_id)->whereHas('role', function ($query) {
       return $query->where([['is_staff', '0'], ['is_teacher', '0']]);
@@ -233,25 +186,23 @@ class StudentRepository implements StudentInterface
     $student->delete();
     return $this->apiResponse(200, 'Student was deleted');
   }
-  //* ===================END FUNCTION  deleteStudent ===================
+//* ===================END FUNCTION  deleteStudent ===================
 
-  //* =================== FUNCTION  allStudents ===================
+//* =================== FUNCTION  allStudents ===================
 
   public function allStudents()
   {
-
-
 
     $students = $this->User::whereHas('role', function ($query) {
       return $query->where([['is_staff', '0'], ['is_teacher', 0]]);
     })->withCount('studentGroups')->get();
 
-    return $this->apiResponse(200, 'all teachers', null, $students);
+    return $this->apiResponse(200, 'all students', null, $students);
   }
 
-  //* ===================END FUNCTION allStudents ===================
+//* ===================END FUNCTION allStudents ===================
 
-  //* =================== FUNCTION specificStudent ===================
+//* =================== FUNCTION specificStudent ===================
   public function specificStudent($request)
   {
 
@@ -275,16 +226,16 @@ class StudentRepository implements StudentInterface
 
     return $this->apiResponse(200, 'done', null, $student);
   }
-  //* ===================END FUNCTION specificStudent ================
+//* ===================END FUNCTION specificStudent ================
 
-  //* =================== FUNCTION updateStudentGroup ===================
+//* =================== FUNCTION updateStudentGroup ===================
   public function updateStudentGroup($request)
   {
   }
 
-  //* =================== END FUNCTION updateStudentGroup ===================
+//* =================== END FUNCTION updateStudentGroup ===================
 
-  //* =================== FUNCTION deleteStudentGroup ===================
+//* =================== FUNCTION deleteStudentGroup ===================
   public function deleteStudentGroup($request)
   {
   }
