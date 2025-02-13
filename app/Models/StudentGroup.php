@@ -15,5 +15,8 @@ class StudentGroup extends Model
         'count',
         'price'
     ];
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3fac0a0b8cd313ab251d3a323528d983508adb76
 }

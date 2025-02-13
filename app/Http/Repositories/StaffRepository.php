@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Validator;
 class StaffRepository implements StaffInterface
 {
   use ApiDesignTrait;
-
   private $User;
   private $Role;
 
