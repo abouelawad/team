@@ -67,4 +67,7 @@ Route::group(['prefix'=> 'admin'], function(){
   Route::get('student/select' , [StudentController::class , 'specificStudent']);
   Route::post('student/delete' , [StudentController::class , 'deleteStudent']);
   Route::post('student/update' , [StudentController::class , 'updateStudent']);
+  Route::post('student/update/group' , [StudentController::class , 'updateStudent']);
+  Route::post('student/delete/group' , [StudentController::class , 'updateStudent']);
+
 });

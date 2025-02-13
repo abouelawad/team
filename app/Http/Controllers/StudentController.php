@@ -10,19 +10,21 @@ class StudentController extends Controller
     private $studentInterface;
 
 
-public function __construct(StudentInterface $studentInterface )
-{
-     $this->studentInterface = $studentInterface;
-}
+  public function __construct(StudentInterface $studentInterface)
+  {
+      $this->studentInterface = $studentInterface;
+  }
 
-public function addStudent(Request $request)
-{
-   return  $this->studentInterface->addStudent($request);
-}
+  public function addStudent(Request $request)
+  {
+    return  $this->studentInterface->addStudent($request);
+  }
 
-  public function updateStudent(Request $request){
+  public function updateStudent(Request $request)
+  {
       return $this->studentInterface->updateStudent($request);
   }
+
   public function deleteStudent(Request $request)
   {
     return  $this->studentInterface->deleteStudent($request);
@@ -32,7 +34,18 @@ public function addStudent(Request $request)
       return $this->studentInterface->allStudents() ;
   }
 
-  public function specificStudent(Request $request){  
-    return $this->studentInterface->specificStudent($request);
-    }
+  public function specificStudent(Request $request)
+  {  
+  return $this->studentInterface->specificStudent($request);
+  }
+
+  public function updateStudentGroup(Request $request)
+  {
+  return $this->studentInterface->updateStudentGroup($request);
+  }
+  
+  public function deleteStudentGroup(Request $request)
+  {
+  return $this->studentInterface->deleteStudentGroup($request);
+  }
 }
